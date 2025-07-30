@@ -4,10 +4,12 @@ import { useBooking } from '../contexts/BookingContext';
 import BookingCalendar from '../components/BookingCalendar';
 import CustomerInsights from '../components/CustomerInsights';
 import RevenueChart from '../components/RevenueChart';
+import ChatContainer from '../components/chat/ChatContainer';
 
 function BusinessDashboard() {
   const { state } = useBooking();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Calculate dashboard metrics
   const totalBookings = state.bookings.length;
@@ -221,6 +223,19 @@ function BusinessDashboard() {
           </div>
         </div>
       )}
+
+      {/* Floating Chat Widget */}
+      <ChatContainer
+        isOpen={isChatOpen}
+        onToggle={() => setIsChatOpen(!isChatOpen)}
+        bookingContext={{
+          userType: 'business',
+          currentUser: state.currentUser,
+          totalBookings,
+          todaysBookings,
+          totalRevenue
+        }}
+      />
     </div>
   );
 }

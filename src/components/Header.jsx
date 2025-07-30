@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Calendar, Users, BarChart } from 'lucide-react';
+import { Calendar, Users, BarChart, MessageCircle } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 
 function Header() {
@@ -39,6 +39,15 @@ function Header() {
               }`}
             >
               Dashboard
+            </Link>
+            <Link
+              to="/chat"
+              className={`nav-link ${
+                location.pathname.startsWith('/chat') ? 'nav-link-active' : ''
+              }`}
+            >
+              <MessageCircle className="h-4 w-4 mr-1" />
+              Chat Assistant
             </Link>
             {state.userType === 'business' && (
               <Link

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Calendar, Clock, User, CreditCard, MapPin, Star } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 import { usePaymentContext } from '../hooks/usePaymentContext';
+import ChatContainer from '../components/chat/ChatContainer';
 
 function CustomerBooking() {
   const { businessId } = useParams();
@@ -19,6 +20,7 @@ function CustomerBooking() {
     phone: ''
   });
   const [paymentCompleted, setPlatementCompleted] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const business = state.businesses.find(b => b.id === parseInt(businessId));
 
@@ -354,6 +356,21 @@ function CustomerBooking() {
           </button>
         </div>
       )}
+
+      {/* Floating Chat Widget */}
+      <ChatContainer
+        isOpen={isChatOpen}
+        onToggle={() => setIsChatOpen(!isChatOpen)}
+        businessId={businessId}
+        bookingContext={{
+          business,
+          selectedService,
+          selectedDate,
+          selectedTime,
+          step,
+          customerDetails
+        }}
+      />
     </div>
   );
 }
