@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom';
 import { Calendar, Clock, User, CreditCard, MapPin, Star } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 import { usePaymentContext } from '../hooks/usePaymentContext';
+import { useReminderScheduler } from '../hooks/useReminderScheduler';
 
 function CustomerBooking() {
   const { businessId } = useParams();
   const { state, dispatch } = useBooking();
   const { createSession } = usePaymentContext();
+  const { scheduleReminder } = useReminderScheduler();
   
   const [step, setStep] = useState(1); // 1: service, 2: time, 3: details, 4: payment
   const [selectedService, setSelectedService] = useState(null);
@@ -18,6 +20,7 @@ function CustomerBooking() {
     email: '',
     phone: ''
   });
+  const [smsReminderEnabled, setSmsReminderEnabled] = useState(true);
   const [paymentCompleted, setPlatementCompleted] = useState(false);
 
   const business = state.businesses.find(b => b.id === parseInt(businessId));
@@ -81,10 +84,34 @@ function CustomerBooking() {
         duration: selectedService.duration,
         service: selectedService.name,
         status: 'confirmed',
-        customer: customerDetails
+        customer: customerDetails,
+        reminder: {
+          enabled: smsReminderEnabled,
+          status: 'pending',
+          scheduledTime: null,
+          sentTime: null,
+          attempts: 0,
+          lastError: null
+        }
       };
 
       dispatch({ type: 'ADD_BOOKING', payload: newBooking });
+      
+      // Schedule reminder if enabled
+      if (smsReminderEnabled) {
+        // We need to get the booking with the generated ID
+        setTimeout(() => {
+          const createdBooking = state.bookings.find(b => 
+            b.businessId === business.id &&
+            b.date === selectedDate &&
+            b.time === selectedTime &&
+            b.customer.email === customerDetails.email
+          );
+          if (createdBooking) {
+            scheduleReminder(createdBooking);
+          }
+        }, 100); // Small delay to ensure booking is added to state
+      }
       
       // Add customer if new
       const existingCustomer = state.customers.find(c => c.email === customerDetails.email);
@@ -259,6 +286,21 @@ function CustomerBooking() {
                 className="input"
                 placeholder="Enter your phone number"
               />
+            </div>
+
+            <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg">
+              <input
+                type="checkbox"
+                id="smsReminder"
+                checked={smsReminderEnabled}
+                onChange={(e) => setSmsReminderEnabled(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="smsReminder" className="text-sm text-gray-700">
+                <span className="font-medium">Send me SMS reminders</span>
+                <br />
+                <span className="text-gray-500">Get a text message 1 hour before your appointment</span>
+              </label>
             </div>
 
             <button type="submit" className="btn btn-primary w-full">

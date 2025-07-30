@@ -63,6 +63,14 @@ const initialState = {
         name: "Sarah Johnson",
         email: "sarah@example.com",
         phone: "+1 (555) 123-4567"
+      },
+      reminder: {
+        enabled: true,
+        status: "pending", // pending, sent, failed, cancelled
+        scheduledTime: null,
+        sentTime: null,
+        attempts: 0,
+        lastError: null
       }
     }
   ],
@@ -113,6 +121,45 @@ function bookingReducer(state, action) {
       return {
         ...state,
         customers: [...state.customers, { ...action.payload, id: Date.now() }]
+      };
+    
+    case 'UPDATE_REMINDER_STATUS':
+      return {
+        ...state,
+        bookings: state.bookings.map(booking =>
+          booking.id === action.payload.bookingId 
+            ? { 
+                ...booking, 
+                reminder: { 
+                  ...booking.reminder, 
+                  ...action.payload.reminderData 
+                } 
+              } 
+            : booking
+        )
+      };
+    
+    case 'SCHEDULE_REMINDER':
+      return {
+        ...state,
+        bookings: state.bookings.map(booking =>
+          booking.id === action.payload.bookingId 
+            ? { 
+                ...booking, 
+                reminder: { 
+                  ...booking.reminder, 
+                  status: 'scheduled',
+                  scheduledTime: action.payload.scheduledTime
+                } 
+              } 
+            : booking
+        )
+      };
+    
+    case 'LOAD_DATA':
+      return {
+        ...state,
+        [action.payload.key]: action.payload.data
       };
     
     default:

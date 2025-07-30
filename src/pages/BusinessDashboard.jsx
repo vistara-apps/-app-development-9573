@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, Users, TrendingUp, Clock, DollarSign } from 'lucide-react';
+import { Calendar, Users, TrendingUp, Clock, DollarSign, MessageSquare } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 import BookingCalendar from '../components/BookingCalendar';
 import CustomerInsights from '../components/CustomerInsights';
 import RevenueChart from '../components/RevenueChart';
+import ReminderManagement from '../components/ReminderManagement';
 
 function BusinessDashboard() {
   const { state } = useBooking();
@@ -156,6 +157,17 @@ function BusinessDashboard() {
             <TrendingUp className="h-4 w-4 inline mr-2" />
             Analytics
           </button>
+          <button
+            onClick={() => setActiveTab('reminders')}
+            className={`px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
+              activeTab === 'reminders'
+                ? 'bg-white text-primary-600 shadow-soft'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <MessageSquare className="h-4 w-4 inline mr-2" />
+            Reminders
+          </button>
         </div>
       </div>
 
@@ -221,6 +233,8 @@ function BusinessDashboard() {
           </div>
         </div>
       )}
+      
+      {activeTab === 'reminders' && <ReminderManagement />}
     </div>
   );
 }
