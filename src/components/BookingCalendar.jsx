@@ -1,11 +1,29 @@
 import React, { useState } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, isToday } from 'date-fns';
-import { ChevronLeft, ChevronRight, Clock, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, User, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 
 function BookingCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { state } = useBooking();
+
+  const getReminderIcon = (booking) => {
+    if (!booking.reminder?.enabled) return null;
+    
+    const status = booking.reminder.status;
+    switch (status) {
+      case 'sent':
+        return <CheckCircle className="h-3 w-3 text-green-500" title="Reminder sent" />;
+      case 'failed':
+        return <XCircle className="h-3 w-3 text-red-500" title="Reminder failed" />;
+      case 'scheduled':
+        return <Clock className="h-3 w-3 text-blue-500" title="Reminder scheduled" />;
+      case 'cancelled':
+        return <XCircle className="h-3 w-3 text-gray-500" title="Reminder cancelled" />;
+      default:
+        return <AlertCircle className="h-3 w-3 text-yellow-500" title="Reminder pending" />;
+    }
+  };
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -43,7 +61,10 @@ function BookingCalendar() {
                 className="bg-blue-100 text-blue-800 text-xs p-1 rounded truncate"
                 title={`${booking.time} - ${booking.customer.name} - ${booking.service}`}
               >
-                <div className="font-medium">{booking.time}</div>
+                <div className="flex items-center justify-between">
+                  <div className="font-medium">{booking.time}</div>
+                  {getReminderIcon(booking)}
+                </div>
                 <div className="truncate">{booking.customer.name}</div>
               </div>
             ))}
@@ -112,9 +133,12 @@ function BookingCalendar() {
                     <div className="text-sm text-gray-600">{booking.service}</div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4 text-gray-400" />
-                  <span className="font-medium">{booking.customer.name}</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-4 w-4 text-gray-400" />
+                    <span className="font-medium">{booking.customer.name}</span>
+                  </div>
+                  {getReminderIcon(booking)}
                 </div>
               </div>
             ))}
