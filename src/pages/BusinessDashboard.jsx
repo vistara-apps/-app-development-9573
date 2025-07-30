@@ -39,50 +39,70 @@ function BusinessDashboard() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="card">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="metric-card group">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-              <p className="text-2xl font-bold text-gray-900">{totalBookings}</p>
+            <div className="flex-1">
+              <p className="metric-label mb-1">Total Bookings</p>
+              <p className="metric-value">{totalBookings}</p>
+              <div className="flex items-center mt-2">
+                <span className="text-xs text-success-600 bg-success-100 px-2 py-1 rounded-full">
+                  +12% from last month
+                </span>
+              </div>
             </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Calendar className="h-6 w-6 text-blue-600" />
+            <div className="metric-icon bg-gradient-to-br from-primary-100 to-primary-200 group-hover:from-primary-200 group-hover:to-primary-300 transition-all duration-300">
+              <Calendar className="h-6 w-6 text-primary-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="metric-card group">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Today's Bookings</p>
-              <p className="text-2xl font-bold text-gray-900">{todaysBookings}</p>
+            <div className="flex-1">
+              <p className="metric-label mb-1">Today's Bookings</p>
+              <p className="metric-value">{todaysBookings}</p>
+              <div className="flex items-center mt-2">
+                <span className="text-xs text-success-600 bg-success-100 px-2 py-1 rounded-full">
+                  +3 from yesterday
+                </span>
+              </div>
             </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <Clock className="h-6 w-6 text-green-600" />
+            <div className="metric-icon bg-gradient-to-br from-success-100 to-success-200 group-hover:from-success-200 group-hover:to-success-300 transition-all duration-300">
+              <Clock className="h-6 w-6 text-success-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="metric-card group">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Customers</p>
-              <p className="text-2xl font-bold text-gray-900">{state.customers.length}</p>
+            <div className="flex-1">
+              <p className="metric-label mb-1">Total Customers</p>
+              <p className="metric-value">{state.customers.length}</p>
+              <div className="flex items-center mt-2">
+                <span className="text-xs text-success-600 bg-success-100 px-2 py-1 rounded-full">
+                  +8% growth
+                </span>
+              </div>
             </div>
-            <div className="bg-purple-100 p-3 rounded-full">
+            <div className="metric-icon bg-gradient-to-br from-purple-100 to-purple-200 group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-300">
               <Users className="h-6 w-6 text-purple-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="metric-card group">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">${totalRevenue}</p>
+            <div className="flex-1">
+              <p className="metric-label mb-1">Total Revenue</p>
+              <p className="metric-value">${totalRevenue.toLocaleString()}</p>
+              <div className="flex items-center mt-2">
+                <span className="text-xs text-success-600 bg-success-100 px-2 py-1 rounded-full">
+                  +15% this month
+                </span>
+              </div>
             </div>
-            <div className="bg-orange-100 p-3 rounded-full">
+            <div className="metric-icon bg-gradient-to-br from-orange-100 to-orange-200 group-hover:from-orange-200 group-hover:to-orange-300 transition-all duration-300">
               <DollarSign className="h-6 w-6 text-orange-600" />
             </div>
           </div>
@@ -90,49 +110,53 @@ function BusinessDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-8">
-        <nav className="flex space-x-8">
+      <div className="mb-8">
+        <div className="bg-gray-100 p-1 rounded-2xl inline-flex">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
               activeTab === 'overview'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-primary-600 shadow-soft'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
+            <TrendingUp className="h-4 w-4 inline mr-2" />
             Overview
           </button>
           <button
             onClick={() => setActiveTab('calendar')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
               activeTab === 'calendar'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-primary-600 shadow-soft'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
+            <Calendar className="h-4 w-4 inline mr-2" />
             Calendar
           </button>
           <button
             onClick={() => setActiveTab('customers')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
               activeTab === 'customers'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-primary-600 shadow-soft'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            Customer Insights
+            <Users className="h-4 w-4 inline mr-2" />
+            Customers
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
               activeTab === 'analytics'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-primary-600 shadow-soft'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
+            <TrendingUp className="h-4 w-4 inline mr-2" />
             Analytics
           </button>
-        </nav>
+        </div>
       </div>
 
       {/* Tab Content */}
